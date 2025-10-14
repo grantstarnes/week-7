@@ -29,7 +29,7 @@ def fetch_location_data(geolocator, loc):
             "location": loc,
             "latitude": location.latitude,
             "longitude": location.longitude,
-            "type": location.geo_type
+            "type": location.raw.get("type", "Unknown")
         }
     except (GeocoderTimedOut, GeocoderServiceError) as e:
         print(f"Error for location '{loc}': {e}")
