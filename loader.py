@@ -35,17 +35,17 @@ def fetch_location_data(geolocator, loc):
         print(f"Error for location '{loc}': {e}")
         return None
 
-def build_geo_dataframe(locations):
+def build_geo_dataframe(geolocator, locations):
     geo_data = [fetch_location_data(geolocator, loc) for loc in locations]
     
     return pd.DataFrame(geo_data)
 
 
 if __name__ == "__main__":
-    geo = get_geolocator()
+    geolocator = get_geolocator()
 
     locations = ["Museum of Modern Art", "iuyt8765(*&)", "Alaska", "Franklin's Barbecue", "Burj Khalifa"]
 
-    df = build_geo_dataframe(locations)
+    df = build_geo_dataframe(geolocator, locations)
 
     df.to_csv("./geo_data.csv")
