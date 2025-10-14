@@ -23,17 +23,29 @@ def fetch_location_data(geolocator, loc):
         location = geolocator.geocode(loc)
 
         if location is None:
-            print(f"Location not found: '{loc}'")
-            return None
+            
+            return {
+                "location": loc,
+                "latitude": pd.NA,
+                "longitude": pd.NA,
+                "type": pd.NA
+            }
+        
         return {
             "location": loc,
             "latitude": location.latitude,
             "longitude": location.longitude,
-            "type": location.raw.get("type", "Unknown")
+            "type": location.raw.get("type", pd.NA)
         }
+    
     except (GeocoderTimedOut, GeocoderServiceError) as e:
         print(f"Error for location '{loc}': {e}")
-        return None
+        return {
+            "location": loc,
+            "latitude": pd.NA,
+            "longitude": pd.NA,
+            "type": pd.NA
+        }
 
 def build_geo_dataframe(geolocator, locations):
     geo_data = [fetch_location_data(geolocator, loc) for loc in locations]
