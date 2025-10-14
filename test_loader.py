@@ -30,9 +30,9 @@ class TestLoader(unittest.TestCase):
         result = fetch_location_data(geolocator, "asdfqwer1234")
 
         self.assertEqual(result["location"], "asdfqwer1234")
-        self.assertTrue(pd.isna(result["latitude"]))
-        self.assertTrue(pd.isna(result["longitude"]))
-        self.assertTrue(pd.isna(result["type"]))
+        self.assertIsNone(result["latitude"])
+        self.assertIsNone(result["longitude"])
+        self.assertIsNone(result["type"])
 
 if __name__ == "__main__":
     unittest.main()

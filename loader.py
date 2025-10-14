@@ -7,7 +7,6 @@ from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 import pandas as pd
 
-
 def get_geolocator(agent='h501-student'):
     """
     Initiate a Nominatim geolocator instance given an `agent`.
@@ -34,25 +33,25 @@ def fetch_location_data(geolocator, loc):
             
             return {
                 "location": loc,
-                "latitude": np.nan,
-                "longitude": np.nan,
-                "type": np.nan
+                "latitude": None,
+                "longitude": None,
+                "type": None
             }
         
         return {
             "location": loc,
             "latitude": location.latitude,
             "longitude": location.longitude,
-            "type": location.raw.get("type", np.nan)
+            "type": location.raw.get("type", None)
         }
     
     except (GeocoderTimedOut, GeocoderServiceError) as e:
         print(f"Error for location '{loc}': {e}")
         return {
             "location": loc,
-            "latitude": np.nan,
-            "longitude": np.nan,
-            "type": np.nan
+            "latitude": None,
+            "longitude": None,
+            "type": None
         }
 
 def build_geo_dataframe(geolocator, locations):
@@ -69,6 +68,10 @@ if __name__ == "__main__":
 
     locations = ["Museum of Modern Art", "iuyt8765(*&)", "Alaska", "Franklin's Barbecue", "Burj Khalifa"]
 
-    df = build_geo_dataframe(geolocator, locations)
+    try:
+        df = build_geo_dataframe(geolocator, locations)
 
-    df.to_csv("./geo_data.csv")
+        df.to_csv("./geo_data.csv", index = False)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
