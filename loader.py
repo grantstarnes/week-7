@@ -19,6 +19,13 @@ def get_geolocator(agent='h501-student'):
     return Nominatim(user_agent=agent)
 
 def fetch_location_data(geolocator, loc):
+    '''
+    This function retrieves various aspects of geographic information, such as
+    latitude, longitude, amd type for the provided location name, as long as it is
+    a valid location. It takes in geolocator and loc as parameters, and returns 
+    a dictionary with location, latitude, longitude, and type, and if the location
+    isn't valid, it fills the remaining latitude, longitude, and type as NaN.
+    '''
     try:
         location = geolocator.geocode(loc)
 
@@ -48,6 +55,10 @@ def fetch_location_data(geolocator, loc):
         }
 
 def build_geo_dataframe(geolocator, locations):
+    '''
+    This function puts together/returns a pandas dataframe that contains the location,
+    latitude, longitude, and type for each location using a for loop. 
+    '''
     geo_data = [fetch_location_data(geolocator, loc) for loc in locations]
     
     return pd.DataFrame(geo_data)
