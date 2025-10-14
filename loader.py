@@ -2,6 +2,7 @@
 Script to load geographical data into a pandas DataFrame, and save it as a CSV file.
 '''
 
+import numpy as np
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 import pandas as pd
@@ -33,25 +34,25 @@ def fetch_location_data(geolocator, loc):
             
             return {
                 "location": loc,
-                "latitude": pd.NA,
-                "longitude": pd.NA,
-                "type": pd.NA
+                "latitude": "nan",
+                "longitude": "nan",
+                "type": "nan"
             }
         
         return {
             "location": loc,
             "latitude": location.latitude,
             "longitude": location.longitude,
-            "type": location.raw.get("type", pd.NA)
+            "type": str(location.raw.get("type", "nan"))
         }
     
     except (GeocoderTimedOut, GeocoderServiceError) as e:
         print(f"Error for location '{loc}': {e}")
         return {
             "location": loc,
-            "latitude": pd.NA,
-            "longitude": pd.NA,
-            "type": pd.NA
+            "latitude": "nan",
+            "longitude": "nan",
+            "type": "nan"
         }
 
 def build_geo_dataframe(geolocator, locations):
@@ -60,9 +61,8 @@ def build_geo_dataframe(geolocator, locations):
     latitude, longitude, and type for each location using a for loop. 
     '''
     geo_data = [fetch_location_data(geolocator, loc) for loc in locations]
-    
-    return pd.DataFrame(geo_data)
 
+    return pd.DataFrame(geo_data)
 
 if __name__ == "__main__":
     geolocator = get_geolocator()
