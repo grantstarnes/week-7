@@ -34,25 +34,25 @@ def fetch_location_data(geolocator, loc):
             
             return {
                 "location": loc,
-                "latitude": "nan",
-                "longitude": "nan",
-                "type": "nan"
+                "latitude": np.nan,
+                "longitude": np.nan,
+                "type": np.nan
             }
         
         return {
             "location": loc,
             "latitude": location.latitude,
             "longitude": location.longitude,
-            "type": str(location.raw.get("type", "nan"))
+            "type": location.raw.get("type", np.nan)
         }
     
     except (GeocoderTimedOut, GeocoderServiceError) as e:
         print(f"Error for location '{loc}': {e}")
         return {
             "location": loc,
-            "latitude": "nan",
-            "longitude": "nan",
-            "type": "nan"
+            "latitude": np.nan,
+            "longitude": np.nan,
+            "type": np.nan
         }
 
 def build_geo_dataframe(geolocator, locations):
