@@ -4,6 +4,9 @@ from loader import get_geolocator, fetch_location_data, build_geo_dataframe
 
 class TestLoader(unittest.TestCase):
     def test_valid_locations(self):
+        '''
+        Test fetching location data for valid locations and building a dataframe.
+        '''
         
         geolocator = get_geolocator("test_valid_locations")
 
@@ -37,6 +40,10 @@ class TestLoader(unittest.TestCase):
             self.assertEqual(row["type"].lower(), location_data[loc]["type"].lower())
 
     def test_invalid_location(self):
+        '''
+        Test fetching location data for an invalid location.
+        '''
+        
         geolocator = get_geolocator("test_invalid_location")
         result = fetch_location_data(geolocator, "asdfqwer1234")
 
