@@ -16,7 +16,9 @@ def get_geolocator(agent='h501-student'):
     agent : str, optional
         Agent name for Nominatim, by default 'h501-student'
     """
-    return Nominatim(user_agent=agent)
+    geolocator = Nominatim(user_agent=agent)
+
+    return geolocator
 
 def fetch_location_data(geolocator, loc):
     '''
@@ -26,33 +28,28 @@ def fetch_location_data(geolocator, loc):
     a dictionary with location, latitude, longitude, and type, and if the location
     isn't valid, it fills the remaining latitude, longitude, and type as NaN.
     '''
-    try:
-        location = geolocator.geocode(loc)
-
-        if location is None:
-            
-            return {
-                "location": loc,
-                "latitude": None,
-                "longitude": None,
-                "type": None
-            }
-        
-        return {
-            "location": loc,
-            "latitude": location.latitude,
-            "longitude": location.longitude,
-            "type": location.raw.get("type", None)
-        }
     
-    except (GeocoderTimedOut, GeocoderServiceError) as e:
-        print(f"Error for location '{loc}': {e}")
-        return {
-            "location": loc,
-            "latitude": None,
-            "longitude": None,
-            "type": None
-        }
+    location = geolocator.geocode(loc, timeout=10)
+
+    if location is None:
+        return {'location': loc,
+                'latitude': None,
+                'longitude': None,
+                'type': None}
+    
+    place_type = None
+
+    if hasattr(location, 'raw') and isinstance(location.raw, dict):
+        place_type = location.raw.get('type')
+    if place_type is None:
+        place_type = getattr(location, 'geo_type', None)
+    
+    return {
+        'location': loc,
+        'latitude': location.latitude,
+        'longitude': location.longitude,
+        'type': place_type
+    }
 
 def build_geo_dataframe(geolocator, locations):
     '''
@@ -64,14 +61,9 @@ def build_geo_dataframe(geolocator, locations):
     return pd.DataFrame(geo_data)
 
 if __name__ == "__main__":
-    geolocator = get_geolocator()
+    geo = get_geolocator()
 
     locations = ["Museum of Modern Art", "iuyt8765(*&)", "Alaska", "Franklin's Barbecue", "Burj Khalifa"]
 
-    try:
-        df = build_geo_dataframe(geolocator, locations)
-
-        df.to_csv("./geo_data.csv", index = False)
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    df = build_geo_dataframe(geo, locations)
+    df.to_csv("geographical_data.csv", index=False)
