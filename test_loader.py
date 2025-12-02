@@ -18,7 +18,7 @@ class TestLoader(unittest.TestCase):
                 "longitude": -73.9782438,
                 "type": "Museum"
             },
-            "USS Alabama Battleship Memorial Park": {
+            "USS. Alabama Battleship Memorial Park": {
                 "latitude": 30.684373,
                 "longitude": -88.015316,
                 "type": "Park"
